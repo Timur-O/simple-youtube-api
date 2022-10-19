@@ -108,6 +108,7 @@ class Channel():
 
                 def start_login():
                     credentials = run_flow(flow, storage, http=httplib2.Http())
+                    root.destroy()
 
                 button = tk.Button(root, image=tk_image, command=start_login, highlightthickness = 0, bd = 0)
 
