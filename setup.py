@@ -62,6 +62,7 @@ requires = [
     "decorator>=4.4.0",
     "progressbar2>=3.42.0",
     "pyser>=0.1.4",
+    "Pillow>=9.2.0"
 ]
 
 test_reqs = [

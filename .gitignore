@@ -111,3 +111,6 @@ credentials.storage
 client_secret.json
 developer_key
 *.mp4
+
+# IntelliJ Files
+.idea

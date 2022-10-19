@@ -10,6 +10,8 @@ from typing import List
 
 import progressbar
 import httplib2
+import tkinter as tk
+from PIL import Image, ImageTk
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -59,8 +61,10 @@ class Channel():
       login object to the channel
      """
 
-    def __init__(self):
+    def __init__(self, show_login_button, login_button_url):
         self.channel = None
+        self.show_login_button = show_login_button
+        self.login_button_url = login_button_url
 
     def login(
         self,
@@ -94,7 +98,20 @@ class Channel():
                 sys.argv = [sys.argv[0], "--noauth_local_webserver"]
 
             flow = flow_from_clientsecrets(client_secret_path, scope=scope)
-            credentials = run_flow(flow, storage, http=httplib2.Http())
+            if (self.show_login_button):
+                root = tk.Tk()
+                image = Image.open(self.login_button_url)
+                tk_image = ImageTk.PhotoImage(image)
+
+                def start_login():
+                    credentials = run_flow(flow, storage, http=httplib2.Http())
+
+                button = tk.Button(root, image=tk_image, command=start_login)
+
+                button.pack()
+                root.mainloop()
+            else:
+                credentials = run_flow(flow, storage, http=httplib2.Http())
 
             sys.argv = saved_argv
 
