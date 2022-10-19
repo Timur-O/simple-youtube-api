@@ -100,15 +100,18 @@ class Channel():
             flow = flow_from_clientsecrets(client_secret_path, scope=scope)
             if (self.show_login_button):
                 root = tk.Tk()
+                root.title("Simple YouTube API - Login to YouTube")
+                root.config(height=677, width=343)
+
                 image = Image.open(self.login_button_url)
                 tk_image = ImageTk.PhotoImage(image)
 
                 def start_login():
                     credentials = run_flow(flow, storage, http=httplib2.Http())
 
-                button = tk.Button(root, image=tk_image, command=start_login)
+                button = tk.Button(root, image=tk_image, command=start_login, highlightthickness = 0, bd = 0)
 
-                button.pack()
+                button.pack(anchor='center')
                 root.mainloop()
             else:
                 credentials = run_flow(flow, storage, http=httplib2.Http())
