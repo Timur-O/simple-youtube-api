@@ -65,6 +65,7 @@ class Channel():
         self.channel = None
         self.show_login_button = show_login_button
         self.login_button_url = login_button_url
+        self.credentials = None
 
     def login(
         self,
@@ -89,9 +90,9 @@ class Channel():
         """
 
         storage = Storage(storage_path)
-        credentials = storage.get()
+        self.credentials = storage.get()
 
-        if credentials is None or credentials.invalid:
+        if self.credentials is None or self.credentials.invalid:
             saved_argv = []
             if auth_local_webserver is False:
                 saved_argv = sys.argv
@@ -101,26 +102,31 @@ class Channel():
             if (self.show_login_button):
                 root = tk.Tk()
                 root.title("Simple YouTube API - Login to YouTube")
-                root.config(height=677, width=343)
+                root.geometry("677x343")
+
+                text_var = tk.StringVar()
+                label = tk.Label(root, textvariable=text_var)
+                text_var.set("Click the button below to login to YouTube:")
+                label.place(relx=0.5, rely=0.4, anchor='center')
 
                 image = Image.open(self.login_button_url)
                 tk_image = ImageTk.PhotoImage(image)
 
                 def start_login():
-                    credentials = run_flow(flow, storage, http=httplib2.Http())
+                    self.credentials = run_flow(flow, storage, http=httplib2.Http())
                     root.destroy()
 
-                button = tk.Button(root, image=tk_image, command=start_login, highlightthickness = 0, bd = 0)
+                button = tk.Button(root, image=tk_image, command=start_login, highlightthickness=0, bd=0)
 
-                button.pack(anchor='center')
+                button.place(relx=0.5, rely=0.5, anchor='center')
                 root.mainloop()
             else:
-                credentials = run_flow(flow, storage, http=httplib2.Http())
+                self.credentials = run_flow(flow, storage, http=httplib2.Http())
 
             sys.argv = saved_argv
 
         self.channel = build(
-            API_SERVICE_NAME, API_VERSION, credentials=credentials
+            API_SERVICE_NAME, API_VERSION, credentials=self.credentials
         )
 
     def get_login(self):
